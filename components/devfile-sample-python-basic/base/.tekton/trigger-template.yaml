@@ -1,0 +1,53 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  creationTimestamp: null
+  name: devfile-sample-python-basic
+  namespace: default
+spec:
+  params:
+  - name: git-revision
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      annotations:
+        build.appstudio.openshift.io/application: test-application
+        build.appstudio.openshift.io/build: "true"
+        build.appstudio.openshift.io/component: devfile-sample-python-basic
+        build.appstudio.openshift.io/type: build
+        build.appstudio.openshift.io/version: "0.1"
+        pipelines.appstudio.openshift.io/type: build
+      creationTimestamp: null
+      generateName: devfile-sample-python-basic-
+      labels:
+        build.appstudio.openshift.io/application: test-application
+        build.appstudio.openshift.io/build: "true"
+        build.appstudio.openshift.io/component: devfile-sample-python-basic
+        build.appstudio.openshift.io/type: build
+        build.appstudio.openshift.io/version: "0.1"
+        pipelines.appstudio.openshift.io/type: build
+      namespace: default
+    spec:
+      params:
+      - name: git-url
+        value: https://github.com/devfile-samples/devfile-sample-python-basic
+      - name: output-image
+        value: quay.io/sdouglas/devfile-sample-python-basic:latest-$(tt.params.git-revision)
+      - name: dockerfile
+        value: docker/Dockerfile
+      - name: path-context
+        value: .
+      pipelineRef:
+        bundle: quay.io/redhat-appstudio/hacbs-templates-bundle:latest
+        name: docker-build
+      workspaces:
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: appstudio
+        subPath: devfile-sample-python-basic/$(tt.params.git-revision)
+      - name: registry-auth
+        secret:
+          secretName: redhat-appstudio-registry-pull-secret
+    status: {}
+status: {}
