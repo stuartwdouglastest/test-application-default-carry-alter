@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/created-by: application-service
+    app.kubernetes.io/instance: devfile-sample-code-with-quarkus
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: devfile-sample-code-with-quarkus
+    app.kubernetes.io/part-of: test-application
+  name: devfile-sample-code-with-quarkus
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: devfile-sample-code-with-quarkus
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: devfile-sample-code-with-quarkus
+    spec:
+      containers:
+      - image: quay.io/sdouglas/devfile-sample-code-with-quarkus
+        imagePullPolicy: Always
+        name: container-image
+        resources: {}
+status: {}
